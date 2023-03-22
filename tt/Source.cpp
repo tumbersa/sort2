@@ -8,92 +8,57 @@ void print(int* a, int n) {
 	cout << endl;
 }
 
-int shellSort(int arr[], int n)
-{
-    for (int gap = n / 2; gap > 0; gap /= 2)
-    {
-        
-        for (int i = gap; i < n; i += 1)
-        {
-            
-            int temp = arr[i];
-
-           
-            int j;
-            for (j = i; j >= gap && arr[j - gap] > temp; j -= gap) {
-                arr[j] = arr[j - gap];
-                print(arr, n);
-            }
-            print(arr, n);
-            arr[j] = temp;
-        }
-        print(arr, n);
+void merge(int* A, int* B, int p, int q, int r, bool flag) {
+    cout << "Before" << endl;
+    int j = p;
+    for (int i = 0; i < r - p + 1; i++) {
+        cout << A[j] << " ";
+        j++;
     }
-    return 0;
-}
-int getNextGap(int gap)
-{
-    gap = (gap * 10) / 13;
 
-    if (gap < 1)
-        return 1;
-    return gap;
-}
-
-void combSort(int a[], int n)
-{
+    cout << endl;
     
-    int gap = n;
-
-  
-    bool swapped = true;
-
-    
-    while (gap != 1 || swapped == true)
-    {
-        
-        gap = getNextGap(gap);
-
-        
-        swapped = false;
-
-        
-        for (int i = 0; i < n - gap; i++)
-        {
-            if (a[i] > a[i + gap])
-            {
-                swap(a[i], a[i + gap]);
-                swapped = true;
-            }
-            print(a, n);
+    int in_pos1 = p;
+    int in_pos2 = q + 1;
+    int out_pos = 0;
+    while (in_pos1 <= q && in_pos2 <= r) {
+        if ((A[in_pos1] < A[in_pos2] && flag == 0) || (A[in_pos1] > A[in_pos2] && flag == 1)) {
+            B[out_pos++] = A[in_pos1++];
         }
+        else B[out_pos++] = A[in_pos2++];
     }
+    while (in_pos1 <= q)
+        B[out_pos++] = A[in_pos1++];
+    while (in_pos2 <= r) 
+        B[out_pos++] = A[in_pos2++];
+    for (int i = 0; i < r - p + 1; i++) {
+        A[p + i] = B[i];
+    }
+    cout << "After" << endl;
+    j = p;
+    for (int i = 0; i < r - p + 1; i++) {
+        cout << A[j] << " ";
+        j++;
+    }
+    cout << endl;
 }
-void gnomeSort(int arr[], int n)
-{
-    int index = 0;
-
-    while (index < n) {
-        if (index == 0)
-            index++;
-        if (arr[index] >= arr[index - 1])
-            index++;
-        else {
-            swap(arr[index], arr[index - 1]);
-            index--;
-        }
-        print(arr, n);
+void mergeSort(int* A, int* B, int p, int r, bool flag) {
+    if (p < r) {
+        int q = (p + r) / 2;
+        mergeSort(A, B, p, q, flag);
+        mergeSort(A, B, q + 1, r, flag);
+        merge(A, B, p, q, r, flag);
     }
-    return;
 }
 int main() {
-    int arr[] = { 12, 34, 54, 2, 3 }, i;
+    int arr[] = { 12, 34, 54, 2, 3 };
     int n = sizeof(arr) / sizeof(arr[0]);
 
     cout << "Array before sorting: \n";
     print(arr, n);
-
-    shellSort(arr, n);
+    cout << endl;
+    int* b = new int[n];
+    mergeSort(arr, b, 0,n-1,false);
 
     cout << "\nArray after sorting: \n";
     print(arr, n);
